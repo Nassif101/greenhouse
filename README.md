@@ -932,20 +932,29 @@ Embedded AI may be explored later, but it is not part of the first hardware revi
 
 ## Phase 0: Requirements and Planning
 
-* [ ] Define greenhouse size
-* [x] Select 12 V external power supply architecture
-* [x] Select STM32H7 as main controller
-* [x] Select ESP32-WROOM-32 + LAN8720 for communication board
-* [x] Select JSON-lines over UART for main-to-comm protocol
-* [x] Select Modbus RTU over RS485 for sensor bus
-* [x] Define initial actuator count: 1 pump, 2 LED strips, 1 fan, no valves
-* [ ] Define exact current rating for pump
-* [ ] Define exact current rating for each LED strip
-* [ ] Define exact current rating for fan
-* [ ] Create full power budget
-* [ ] Create system block diagram
+* [x] Define greenhouse size: 40 × 40 × 60 cm
+* [x] Select external power supply: 12 V, 12.5 A
+* [x] Select main controller: STM32H7
+* [x] Select communication board: ESP32-WROOM-32 + LAN8720
+* [x] Select main-to-comm protocol: JSON-lines over UART
+* [x] Select sensor bus: Modbus RTU over RS485
+* [x] Define actuator count: 1 pump, 2 LED strips, 1 fan, no valves
+* [x] Define pump voltage/current: 12 V, max 2.2 A
+* [x] Define fan type: 12 V 4-wire PWM fan
+* [x] Define communication board power approach: 5 V input with onboard 3.3 V regulator
+* [x] Create initial power budget
+* [x] Define safety requirements
+* [x] Define system state machine
+* [ ] Measure LED strip forward voltage
+* [ ] Define LED strip target current
+* [ ] Define LED strip maximum power
+* [ ] Select exact 4-wire PWM fan
+* [ ] Select exact STM32H7 part or development board
+* [ ] Select exact RS485 transceiver
+* [ ] Select exact 5 V and 3.3 V regulators
 * [ ] Create initial BOM
-* [ ] Define safety requirements
+* [ ] Create final schematic block diagram
+
 
 ---
 
