@@ -14,7 +14,7 @@ The system is divided into five main hardware blocks:
 
 The system uses an external 12 V DC power supply. The power board distributes 12 V and generates regulated 5 V and 3.3 V rails.
 
-The STM32H7 main controller handles real-time control and safety. The ESP32 communication board handles Ethernet and MQTT.
+The STM32H743ZIT6 main controller handles real-time control and safety. The ESP32 communication board handles Ethernet and MQTT.
 
 ## 2. High-Level Block Diagram
 
@@ -62,7 +62,7 @@ The STM32H7 main controller handles real-time control and safety. The ESP32 comm
 |                   |   |                              |
 | 1 pump driver     |   | ESP32-WROOM-32                |
 | 2 LED drivers     |   | LAN8720 Ethernet PHY          |
-| 1 fan interface   |   | RJ45 Ethernet connector       |
+| 1 fan power stage |   | RJ45 Ethernet connector       |
 | Current feedback  |   | MQTT client                   |
 | Thermal feedback  |   | UART link to STM32H7          |
 +-------------------+   +---------------+--------------+
@@ -97,7 +97,7 @@ The power board receives the external 12 V supply and provides the required syst
 |---|---|
 | 12 V | Pump, LED drivers, fan |
 | 5 V | Communication board, sensors, peripheral modules |
-| 3.3 V | STM32H7, logic, low-voltage sensors |
+| 3.3 V | STM32H743ZIT6, logic, low-voltage sensors |
 
 ### Required Features
 
@@ -105,15 +105,25 @@ The power board receives the external 12 V supply and provides the required syst
 - Reverse polarity protection.
 - Fuse or eFuse.
 - TVS diode.
-- 5 V buck converter.
-- 3.3 V regulator.
+- 5 V buck converter based on TPS54302.
+- 3.3 V buck converter based on TPS54302.
 - Current monitoring.
 - Power-good indicators.
 - Test points.
 
+### Provisional Input Protection Strategy
+
+For the first PCB revision, a reasonable default strategy is:
+
+- One replaceable main input fuse sized above steady-state load but below wiring fault limits.
+- Reverse-polarity protection using a MOSFET ideal-diode style stage.
+- A 12 V TVS diode across the input after the connector.
+- Bulk capacitance close to the input connector and buck converters.
+- Optional current-sense shunt on the main 12 V rail for bring-up and fault logging.
+
 ## 4. STM32H7 Main Control Board
 
-The STM32H7 is the real-time controller.
+The STM32H743ZIT6 is the real-time controller.
 
 ### Responsibilities
 
@@ -143,15 +153,15 @@ The driver board controls the actuators.
 | Actuator | Quantity | Notes |
 |---|---:|---|
 | Pump | 1 | 12 V, max 2.2 A, driver designed for at least 4 A |
-| LED strips | 2 | Constant-current loads, 21 LEDs each |
-| Fan | 1 | 12 V 4-wire PWM fan |
+| LED strips | 2 | Constant-current loads, about 8.38 V at 1.05 A, about 8.8 W per channel |
+| Fan | 1 | 12 V 2-wire DC fan, about 120 mm x 120 mm, about 0.55 A, exact model TBD |
 | Valves | 0 | Not included in version 1 |
 
 ### Driver Board Features
 
-- Pump driver.
-- Two constant-current LED driver channels.
-- 4-wire fan interface.
+- Pump driver, currently planned around MAX4427CSA+T and AOD4184A.
+- Two constant-current LED driver channels, with TI LM3429 currently planned as the LED driver candidate.
+- 2-wire fan PWM power stage, currently planned around MAX4427CSA+T and AOD4184A.
 - Current sensing where useful.
 - LED thermal monitoring.
 - Flyback protection for inductive loads.
@@ -170,6 +180,8 @@ The communication board handles networking and MQTT.
 ESP32-WROOM-32 + LAN8720 Ethernet PHY
 ```
 
+This is planned as a custom communication board rather than an off-the-shelf module assembly.
+
 ### Responsibilities
 
 - Ethernet initialization.
@@ -186,8 +198,8 @@ ESP32-WROOM-32 + LAN8720 Ethernet PHY
 
 - ESP32-WROOM-32.
 - LAN8720 Ethernet PHY.
+- TLV75533PDBVR 3.3 V LDO.
 - RJ45 connector with magnetics.
-- 3.3 V local regulator.
 - 5 V input from power board.
 - UART connector to STM32H7.
 - EN/reset button.
@@ -313,6 +325,19 @@ greenhouse/system/network
 ## 10. Sensor Interface and Modbus RTU
 
 Remote sensors use Modbus RTU over RS485.
+
+Initial RS485 transceiver candidate:
+
+```text
+SN65LBC176QDRG4
+```
+
+### Initial Local Sensors
+
+- SHT41A-AW1B-R2 for air temperature and humidity.
+- DFRobot SEN0193 capacitive moisture sensor.
+- VEML7700 light sensor.
+- Additional analog inputs should be left available for future prototype sensors.
 
 ### RS485 Connector
 

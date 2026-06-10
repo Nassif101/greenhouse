@@ -945,14 +945,14 @@ Embedded AI may be explored later, but it is not part of the first hardware revi
 * [x] Create initial power budget
 * [x] Define safety requirements
 * [x] Define system state machine
-* [ ] Measure LED strip forward voltage
-* [ ] Define LED strip target current
-* [ ] Define LED strip maximum power
-* [ ] Select exact 4-wire PWM fan
-* [ ] Select exact STM32H7 part or development board
-* [ ] Select exact RS485 transceiver
-* [ ] Select exact 5 V and 3.3 V regulators
-* [ ] Create initial BOM
+* [x] Measure LED strip forward voltage
+* [x] Define LED strip target current
+* [x] Define LED strip maximum power
+* [ ] Select exact 3-wire PWM fan
+* [x] Select exact STM32H7 part or development board
+* [x] Select exact RS485 transceiver
+* [x] Select exact 5 V and 3.3 V regulators
+* [x] Create initial BOM
 * [ ] Create final schematic block diagram
 
 

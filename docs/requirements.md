@@ -25,16 +25,22 @@ Approximate internal volume:
 | Main supply | 12 V DC external power supply |
 | Power supply current | 12.5 A |
 | Available power | 150 W |
-| Main controller | STM32H7 |
+| Main controller | STM32H743ZIT6 |
 | Communication board | ESP32-WROOM-32 + LAN8720 Ethernet PHY |
 | Main-to-comm protocol | JSON-lines over UART |
-| Sensor bus | Modbus RTU over RS485 |
+| Sensor bus | Modbus RTU over RS485, initial transceiver candidate SN65LBC176QDRG4 |
 | Pump channels | 1 |
 | LED channels | 2 |
 | Fan channels | 1 |
 | Valve channels | 0 |
 | Camera | Not included in version 1 |
-| Communication board power | 5 V input, onboard 3.3 V regulator |
+| Communication board power | 5 V input, custom board with TLV75533PDBVR 3.3 V LDO |
+| LED channel target | 8.38 V forward voltage at 1.05 A, about 8.8 W max per channel |
+| LED driver candidate | TI LM3429 |
+| Fan selection | 12 V 2-wire DC fan, about 120 mm x 120 mm, about 2000 RPM class, about 0.55 A, exact model TBD |
+| Main regulators | Two TPS54302 buck regulators, one for 5 V and one for 3.3 V |
+| Pump driver candidate | MAX4427CSA+T gate driver + AOD4184A MOSFET |
+| Fan driver candidate | MAX4427CSA+T gate driver + AOD4184A MOSFET |
 
 ## 3. Functional Requirements
 
@@ -55,6 +61,7 @@ The system shall:
 The system shall:
 
 - Control two constant-current LED strip channels.
+- Target approximately 8.38 V forward voltage at 1.05 A per LED channel.
 - Support PWM dimming.
 - Support manual brightness commands through the dashboard.
 - Support automatic lighting schedules in firmware.
@@ -65,11 +72,11 @@ The system shall:
 
 The system shall:
 
-- Control one 12 V 4-wire PWM fan.
-- Generate a PWM control signal for the fan.
-- Read fan tach feedback if supported.
-- Detect fan failure if no tach signal is measured while the fan is commanded on.
-- Report fan speed and fan faults through MQTT.
+- Control one 12 V 2-wire DC fan using a MOSFET-switched PWM drive stage.
+- Generate a PWM control signal for the fan gate driver.
+- Support manual and automatic fan-speed control through PWM duty control.
+- Detect fan failure where possible using electrical or environmental feedback if implemented.
+- Report commanded fan output and fan faults through MQTT.
 
 ### Sensing
 
@@ -82,6 +89,7 @@ The system shall support:
 - Light intensity sensing.
 - Water tank level sensing.
 - Optional flow sensing.
+- Some extra analog sensor headroom for future prototype expansion.
 - Optional future CO₂, pH, and EC sensing.
 
 Remote sensors shall communicate using Modbus RTU over RS485.
@@ -154,12 +162,6 @@ SAFE_SHUTDOWN
 
 The following still need to be defined or measured:
 
-- LED strip forward voltage.
-- LED target current.
-- LED strip maximum power.
-- Exact 4-wire PWM fan model.
-- Exact STM32H7 part or development board.
-- Exact RS485 transceiver.
-- Exact 5 V regulator.
-- Exact 3.3 V regulator.
-- Final initial BOM.
+- Exact 2-wire fan model.
+- Exact power-input protection parts and connector families.
+- Final list of extra analog sensors beyond the currently selected base set.
