@@ -975,13 +975,13 @@ Embedded AI may be explored later, but it is not part of the first hardware revi
 
 ## Phase 2: ESP32 Ethernet Communication Prototype
 
-* [ ] Select ESP32-WROOM-32 module
-* [ ] Select LAN8720 Ethernet PHY module or PCB implementation
-* [ ] Bring up ESP32 Ethernet
-* [ ] Connect to local network
-* [ ] Connect to MQTT broker
-* [ ] Publish test MQTT messages
-* [ ] Subscribe to command topics
+* [x] Select ESP32-WROOM-32 module
+* [x] Select LAN8720 Ethernet PHY module or PCB implementation
+* [x] Bring up ESP32 Ethernet
+* [x] Connect to local network
+* [x] Connect to MQTT broker
+* [x] Publish test MQTT messages
+* [x] Subscribe to command topics
 * [ ] Implement UART link to STM32H7
 * [ ] Parse JSON-lines from STM32H7
 * [ ] Forward STM32H7 sensor data to MQTT
